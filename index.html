@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESORAK | Mateusz Trapp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Library dla animacji -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #0a0a0a;
+            --accent: #ff4d00;
+            --border: rgba(0,0,0,0.1);
+            --card: #f8f8f8;
+            --glass: rgba(255, 255, 255, 0.8);
+        }
+
+        [data-theme="dark"] {
+            --bg: #050505;
+            --text: #ffffff;
+            --accent: #ff4d00;
+            --border: rgba(255,255,255,0.1);
+            --card: #111111;
+            --glass: rgba(10, 10, 10, 0.8);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; padding: 0 40px; }
+
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 20px 0;
+            background: var(--glass); backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border); z-index: 1000;
+        }
+
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+        .logo img { height: 35px; transition: transform 0.3s; }
+        .logo:hover img { transform: rotate(-10deg) scale(1.1); }
+        .logo span { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; }
+        .logo b { color: var(--accent); }
+
+        .nav-right { display: flex; align-items: center; gap: 40px; }
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a { 
+            font-size: 0.85rem; font-weight: 700; text-decoration: none; 
+            color: var(--text); text-transform: uppercase; letter-spacing: 1px;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px;
+            background: var(--accent); transition: 0.3s;
+        }
+        .nav-links a:hover::after { width: 100%; }
+
+        .theme-btn { 
+            cursor: pointer; color: var(--text); font-size: 1.2rem; 
+            background: var(--card); width: 45px; height: 45px; 
+            border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--border);
+        }
+
+        /* --- Hero --- */
+        .hero {
+            height: 100vh; display: flex; align-items: center; position: relative;
+            overflow: hidden; padding-top: 80px;
+        }
+
+        .hero-bg-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-family: 'Syne', sans-serif; font-size: 25vw; font-weight: 900;
+            color: var(--text); opacity: 0.02; pointer-events: none; white-space: nowrap;
+        }
+
+        .hero-inner { position: relative; z-index: 2; width: 100%; }
+        .hero-tag { 
+            display: inline-block; padding: 6px 15px; background: var(--accent); color: white;
+            font-weight: 800; font-size: 0.7rem; border-radius: 20px; margin-bottom: 25px;
+        }
+        .hero h1 { 
+            font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); 
+            line-height: 1; margin-bottom: 30px; letter-spacing: -2px; 
+        }
+        .hero p { font-size: 1.1rem; max-width: 600px; color: var(--text-muted); margin-bottom: 50px; }
+
+        .btn {
+            padding: 20px 45px; background: var(--text); color: var(--bg);
+            text-decoration: none; font-weight: 800; font-size: 0.9rem; border-radius: 5px;
+            display: inline-flex; align-items: center; gap: 15px; transition: 0.4s;
+        }
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); background: var(--accent); color: white; }
+
+        /* --- Specs Section --- */
+        .specs { padding: 150px 0; background: var(--bg); }
+        .section-header { margin-bottom: 80px; text-align: center; }
+        .section-header h2 { font-family: 'Syne', sans-serif; font-size: 3rem; margin-bottom: 15px; }
+        
+        .spec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
+        .spec-item { 
+            background: var(--card); padding: 50px; border-radius: 20px;
+            border: 1px solid var(--border); position: relative; overflow: hidden;
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .spec-item::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--accent); transform: scaleX(0); transition: 0.4s; transform-origin: left;
+        }
+        .spec-item:hover { transform: translateY(-10px); background: var(--bg); box-shadow: 0 30px 60px rgba(0,0,0,0.05); }
+        .spec-item:hover::before { transform: scaleX(1); }
+        
+        .spec-item i { font-size: 2.5rem; color: var(--accent); margin-bottom: 30px; display: block; }
+        .spec-item h3 { font-size: 1.5rem; margin-bottom: 20px; font-weight: 800; }
+        .spec-item p { font-size: 1rem; color: var(--text); opacity: 0.7; }
+
+        /* --- Contact --- */
+        .contact { 
+            padding: 100px 0; background: var(--text); color: var(--bg); 
+            border-radius: 50px 50px 0 0; margin-top: -50px; position: relative; z-index: 5;
+        }
+        .contact-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; text-align: center; }
+        .contact-box i { font-size: 2rem; color: var(--accent); margin-bottom: 20px; }
+        .contact-box h4 { font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 10px; opacity: 0.6; }
+        .contact-box p { font-size: 1.5rem; font-weight: 800; font-family: 'Syne'; }
+
+        /* --- Footer --- */
+        footer { padding: 100px 0 40px; }
+        .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; margin-bottom: 60px; }
+        .footer-desc h3 { font-family: 'Syne', sans-serif; font-size: 2rem; margin-bottom: 20px; }
+        
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table td { padding: 15px 0; border-bottom: 1px solid var(--border); font-weight: 600; }
+        .data-table td:last-child { text-align: right; color: var(--accent); font-weight: 800; }
+
+        .credits {
+            border-top: 1px solid var(--border); padding-top: 40px;
+            display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700;
+        }
+        .credits a { color: var(--accent); text-decoration: none; }
+
+        /* --- Responsive --- */
+        @media (max-width: 900px) {
+            .nav-links, .footer-grid { display: none; }
+            .spec-grid, .contact-row { grid-template-columns: 1fr; }
+            .container { padding: 0 25px; }
+            .hero h1 { font-size: 3rem; }
+            .contact { border-radius: 30px 30px 0 0; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <nav>
+        <div class="container nav-content">
+            <a href="#home" class="logo">
+                <img src="static/logo.png" alt="R" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2555/2555013.png'">
+                <span>RESO<b>RAK</b></span>
+            </a>
+            <div class="nav-right">
+                <ul class="nav-links">
+                    <li><a href="#specs">Specjalizacje</a></li>
+                    <li><a href="#contact">Kontakt</a></li>
+                </ul>
+                <button class="theme-btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero" id="home">
+        <div class="hero-bg-text">RESORAK</div>
+        <div class="container">
+            <div class="hero-inner" data-aos="fade-up" data-aos-duration="1000">
+                <span class="hero-tag">PREMIUM AUTO SERVICE</span>
+                <h1>MECHANIKA<br>Z CHARAKTEREM</h1>
+                <p>Niezależny warsztat w Pogódkach. Łączymy precyzję rzemieślniczą z nowoczesną techniką warsztatową. Naprawiamy z pasją, doradzamy z uczciwością.</p>
+                <a href="#contact" class="btn">
+                    UMÓW TERMIN <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="specs" id="specs">
+        <div class="container">
+            <div class="section-header" data-aos="fade-down">
+                <h2>NASZE FILARY</h2>
+                <p>Skupiamy się na tym, w czym jesteśmy bezkonkurencyjni.</p>
+            </div>
+            <div class="spec-grid">
+                <div class="spec-item" data-aos="zoom-in-up" data-aos-delay="100">
+                    <i class="fas fa-microchip"></i>
+                    <h3>DIAGNOSTYKA</h3>
+                    <p>Zaawansowane systemy komputerowe pozwalają nam wykryć usterkę, zamiast zgadywać i wymieniać części w ciemno.</p>
+                </div>
+                <div class="spec-item" data-aos="zoom-in-up" data-aos-delay="200">
+                    <i class="fas fa-cogs"></i>
+                    <h3>SILNIK & ROZRZĄD</h3>
+                    <p>Serce Twojego auta w rękach chirurga. Wykonujemy pełne serwisy olejowe oraz skomplikowane wymiany rozrządów.</p>
+                </div>
+                <div class="spec-item" data-aos="zoom-in-up" data-aos-delay="300">
+                    <i class="fas fa-bolt"></i>
+                    <h3>ELEKTROTECHNIKA</h3>
+                    <p>Od alternatora po skomplikowane wiązki elektryczne. Twoje auto nie musi być choinką błędów na desce.</p>
+                </div>
+                <div class="spec-item" data-aos="zoom-in-up" data-aos-delay="400">
+                    <i class="fas fa-wind"></i>
+                    <h3>KLIMATYZACJA</h3>
+                    <p>Profesjonalny serwis układów chłodzenia. Odgrzybianie i testy szczelności.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-row">
+                <div class="contact-box" data-aos="fade-up">
+                    <i class="fas fa-phone-alt"></i>
+                    <h4>ZADZWOŃ</h4>
+                    <p>+48 505 143 444</p>
+                </div>
+                <div class="contact-box" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>ADRES</h4>
+                    <p>POGÓDKI, CYSTERSÓW 39 POMORSKIE</p>
+                </div>
+                <div class="contact-box" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-clock"></i>
+                    <h4>GODZINY</h4>
+                    <p>PN-PT 08:00 - 18:00</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-desc">
+                    <h3>RESORAK</h3>
+                    <p>Warsztat budowany na fundamencie zaufania. Osobiście czuwamy nad jakością każdej wykonanej usługi.</p>
+                </div>
+                <div>
+                    <table class="data-table">
+                        <tr><td>NAZWA</td><td>RESORAK MATEUSZ TRAPP</td></tr>
+                        <tr><td>REGON</td><td>363721540</td></tr>
+                        <tr><td>NIP</td><td>5922056299</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="credits">
+                <span>© 2026 RESORAK SERWIS</span>
+                <span>DESIGN BY <a href="https://ichmgr.pl" target="_blank">ICHMGR.PL</a></span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Inicjalizacja animacji
+        AOS.init({ duration: 800, once: true });
+
+        // Motyw
+        function toggleTheme() {
+            const b = document.body;
+            const current = b.getAttribute('data-theme');
+            const btn = document.querySelector('.theme-btn i');
+            
+            if(current === 'dark') {
+                b.setAttribute('data-theme', 'light');
+                btn.className = 'fas fa-moon';
+            } else {
+                b.setAttribute('data-theme', 'dark');
+                btn.className = 'fas fa-sun';
+            }
+        }
+
+        // Parallax dla tekstu w tle
+        window.addEventListener('scroll', () => {
+            const bgText = document.querySelector('.hero-bg-text');
+            let offset = window.pageYOffset;
+            bgText.style.transform = `translate(-50%, calc(-50% + ${offset * 0.4}px))`;
+        });
+    </script>
+</body>
+</html>
